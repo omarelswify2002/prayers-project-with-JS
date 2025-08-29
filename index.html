@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=distance" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Prayer Times</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo" id="logo">
+                <img src="./image/mosque.png" alt="mosqueLogo" width="70" height="70">
+            </div>
+            <h1>مواقيت الصلاة</h1>
+            <div class="date" id="current-date">السبت، ١٢ محرم ١٤٤٥ هـ</div>
+            <div class="location">
+                <span class="material-symbols-outlined">distance</span>
+                <span id="location"> مصر ، <span id="city-name">القاهرة</span></span>
+            </div>
+            <div class="time" id="current-time">05:30 ص</div>
+        </header>
+        
+        <div class="countdown">
+            <div class="countdown-text" id="countdown-text"></div>
+            <div class="countdown-time" id="countdown-time"></div>
+        </div>
+        
+        <div class="prayer-times">
+            <div class="prayer-card">
+                <div class="prayer-name">
+                    <i class="fas fa-sun"></i>
+                    <span>الفجر</span>
+                </div>
+                <div class="prayer-time" id="Fajr">04:30 ص</div>
+            </div>
+            
+            <div class="prayer-card">
+                <div class="prayer-name">
+                    <i class="fas fa-sun"></i>
+                    <span>الشروق</span>
+                </div>
+                <div class="prayer-time" id="Sunrise">05:45 ص</div>
+            </div>
+            
+            <div class="prayer-card">
+                <div class="prayer-name">
+                    <i class="fas fa-sun"></i>
+                    <span>الظهر</span>
+                </div>
+                <div class="prayer-time" id="Dhuhr">12:00 م</div>
+            </div>
+            
+            <div class="prayer-card">
+                <div class="prayer-name">
+                    <i class="fas fa-sun"></i>
+                    <span>العصر</span>
+                </div>
+                <div class="prayer-time" id="Asr">03:15 م</div>
+            </div>
+            
+            <div class="prayer-card">
+                <div class="prayer-name">
+                    <i class="fas fa-moon"></i>
+                    <span>المغرب</span>
+                </div>
+                <div class="prayer-time" id="Maghrib">06:30 م</div>
+            </div>
+            
+            <div class="prayer-card">
+                <div class="prayer-name">
+                    <i class="fas fa-moon"></i>
+                    <span>العشاء</span>
+                </div>
+                <div class="prayer-time" id="Isha">08:00 م</div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>تم التطوير بكل ❤️ لخدمة المسلمين</p>
+            <div class="settings">
+                <select class="city" id="city"></select>
+            </div>
+        </footer>
+    </div>
+</body>
+<!-- ...other scripts... -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="app.js"></script>
+</html>
