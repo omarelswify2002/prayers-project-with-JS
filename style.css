@@ -167,6 +167,12 @@ footer {
     background: #2a5ba5;
 }
 
+.me {
+    color: #d4e2f5;
+    padding-top: 10px;
+    font-size: .89em;
+}
+
 @media (max-width: 768px) {
     .prayer-times {
         grid-template-columns: 1fr;
