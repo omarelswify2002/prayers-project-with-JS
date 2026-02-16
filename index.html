@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="./image/prayerIcon.jpg" />
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=distance" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -15,6 +16,14 @@
                 <img src="./image/mosque.png" alt="mosqueLogo" width="70" height="70">
             </div>
             <h1>مواقيت الصلاة</h1>
+            <!-- From Uiverse.io by Galahhad --> 
+            <label class="ui-switch">
+                <input type="checkbox" title="Toggle dark mode">
+                <div class="slider">
+                    <div class="circle"></div>
+                </div>
+            </label>
+
             <div class="date" id="current-date">السبت، ١٢ محرم ١٤٤٥ هـ</div>
             <div class="location">
                 <span class="material-symbols-outlined">distance</span>
@@ -22,6 +31,21 @@
             </div>
             <div class="time" id="current-time">05:30 ص</div>
         </header>
+
+        <section class="ramadan-banner" id="ramadan-banner" dir="rtl" aria-live="polite">
+            <div class="ramadan-title">رمضان كريم</div>
+            <p class="ramadan-subtitle" id="ramadan-subtitle">أهلا بكم في أجواء رمضان المباركة.</p>
+        </section>
+
+        <div class="ramadan-decor" aria-hidden="true">
+            <span class="ramadan-lamp lamp-1"></span>
+            <span class="ramadan-lamp lamp-2"></span>
+            <span class="ramadan-lamp lamp-3"></span>
+            <span class="ramadan-moon"></span>
+            <span class="ramadan-star star-1">✦</span>
+            <span class="ramadan-star star-2">✦</span>
+            <span class="ramadan-star star-3">✦</span>
+        </div>
         
         <div class="countdown">
             <div class="countdown-text" id="countdown-text"></div>

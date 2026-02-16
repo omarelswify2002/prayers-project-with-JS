@@ -15,11 +15,74 @@ let dailyZekrRepeat = document.getElementById("daily-zekr-repeat");
 let dailyZekrSource = document.getElementById("daily-zekr-source");
 let morningAzkarList = document.getElementById("morning-azkar-list");
 let eveningAzkarList = document.getElementById("evening-azkar-list");
+let themeToggle = document.getElementById("theme-toggle");
+let themeToggleText = document.getElementById("theme-toggle-text");
+let themeToggleIcon = document.getElementById("theme-toggle-icon");
+let themeSwitchInput = document.querySelector(".ui-switch input[type='checkbox']");
+let ramadanBanner = document.getElementById("ramadan-banner");
+let ramadanSubtitle = document.getElementById("ramadan-subtitle");
 const azkarApiUrl = "https://raw.githubusercontent.com/Seen-Arabic/Morning-And-Evening-Adhkar-DB/main/ar.json";
+const ramadanStartDate = new Date(2026, 1, 18, 0, 0, 0, 0); // February 18, 2026
+const ramadanEndDate = new Date(2026, 2, 19, 23, 59, 59, 999); // March 19, 2026
 let latestAzkar = [];
 document.getElementById("logo").onclick = function() {
     window.location.reload();
 };
+
+function updateThemeToggleUI(isDarkMode) {
+    if (themeSwitchInput) {
+        themeSwitchInput.checked = isDarkMode;
+    }
+    if (!themeToggleText || !themeToggleIcon || !themeToggle) return;
+    themeToggleText.textContent = isDarkMode ? "Light Mode" : "Dark Mode";
+    themeToggleIcon.textContent = isDarkMode ? "SUN" : "MOON";
+    themeToggle.setAttribute("aria-pressed", String(isDarkMode));
+}
+
+function applyTheme(theme) {
+    const isDarkMode = theme === "dark";
+    document.body.classList.toggle("dark-mode", isDarkMode);
+    updateThemeToggleUI(isDarkMode);
+}
+
+function getPreferredTheme() {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light" || savedTheme === "dark") return savedTheme;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+function initializeTheme() {
+    applyTheme(getPreferredTheme());
+    if (themeSwitchInput) {
+        themeSwitchInput.onchange = function() {
+            const nextTheme = themeSwitchInput.checked ? "dark" : "light";
+            applyTheme(nextTheme);
+            localStorage.setItem("theme", nextTheme);
+        };
+    }
+    if (!themeToggle) return;
+    themeToggle.onclick = function() {
+        const willBeDark = !document.body.classList.contains("dark-mode");
+        const nextTheme = willBeDark ? "dark" : "light";
+        applyTheme(nextTheme);
+        localStorage.setItem("theme", nextTheme);
+    };
+}
+
+function getRamadanDayNumber(now = new Date()) {
+    const msPerDay = 24 * 60 * 60 * 1000;
+    return Math.floor((now - ramadanStartDate) / msPerDay) + 1;
+}
+
+function initializeRamadanExperience() {
+    const now = new Date();
+    const isRamadanPeriod = now >= ramadanStartDate && now <= ramadanEndDate;
+    document.body.classList.toggle("ramadan-mode", isRamadanPeriod);
+    if (!ramadanBanner || !ramadanSubtitle) return;
+    if (!isRamadanPeriod) return;
+    const dayNumber = getRamadanDayNumber(now);
+    ramadanSubtitle.textContent = `نسعد بزيارتكم في اليوم ${dayNumber} من رمضان. كل عام وأنتم بخير.`;
+}
 
 function formatTo12HourMM(timeString) {
     let [hours, minutes] = timeString.split(":").map(Number);
@@ -70,6 +133,8 @@ availableCities.map(city => {
 
 // Restore cityName and selected city from localStorage on page load
 window.onload = function() {
+    initializeTheme();
+    initializeRamadanExperience();
     const savedCityName = localStorage.getItem("selectedCityName");
     const savedCityApiName = localStorage.getItem("selectedCityApiName");
     if (savedCityApiName) {
