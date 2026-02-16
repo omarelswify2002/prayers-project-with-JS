@@ -100,11 +100,11 @@ function formatTo12HourSS(timeString) {
 
 
 const availableCities = [
-    {displayName:'المحلة الكبرى',apiName:'El-Mahalla El-Kubra',id:1},
+    {displayName:'القاهرة',apiName:'Cairo',id:1},
     {displayName:'الفيوم',apiName:'Fayyum',id:2},
     {displayName:'مارسى مطروح',apiName:'Marsa Matruh',id:3},
     {displayName:'الاسماعيلية',apiName:'Ismailia',id:4},
-    {displayName:'القاهرة',apiName:'Cairo',id:5},
+    {displayName:'المحلة الكبرى',apiName:'El-Mahalla El-Kubra',id:5},
     {displayName:'الاسكندرية',apiName:'Alexandria',id:6},
     {displayName:'بورسعيد',apiName:'Port Said',id:7},
     {displayName:'أسيوط',apiName:'Asyut',id:8},
