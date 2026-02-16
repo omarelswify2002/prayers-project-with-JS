@@ -139,6 +139,81 @@ h1 {
     color: #ff6b6b;
 }
 
+.azkar-section {
+    padding: 25px 30px 30px;
+    background: #f8fbff;
+    border-top: 1px solid #e6edf8;
+}
+
+.azkar-section h2 {
+    color: #1a2a6c;
+    margin-bottom: 16px;
+    font-size: 1.7rem;
+    text-align: center;
+}
+
+.azkar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.zekr-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    border-right: 5px solid #3a7bd5;
+}
+
+.daily-zekr-card {
+    grid-column: 1 / -1;
+    border-right-color: #1a2a6c;
+}
+
+.zekr-card h3 {
+    color: #1a2a6c;
+    margin-bottom: 10px;
+}
+
+.zekr-content {
+    color: #213046;
+    font-size: 1.05rem;
+    line-height: 1.9;
+}
+
+.zekr-meta {
+    color: #4c6181;
+    font-size: 0.92rem;
+    margin-top: 8px;
+}
+
+.azkar-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 340px;
+    overflow-y: auto;
+    padding-left: 0;
+}
+
+.azkar-list li {
+    padding: 10px;
+    border-radius: 8px;
+    background: #f3f7ff;
+    color: #1c2a41;
+    line-height: 1.8;
+}
+
+.azkar-repeat {
+    display: block;
+    margin-top: 6px;
+    color: #3a7bd5;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
 footer {
     text-align: center;
     padding: 20px;
@@ -184,6 +259,18 @@ footer {
     
     .prayer-time {
         font-size: 1.5rem;
+    }
+
+    .azkar-section {
+        padding: 20px;
+    }
+
+    .azkar-section h2 {
+        font-size: 1.4rem;
+    }
+
+    .daily-zekr-card {
+        grid-column: auto;
     }
 }
 

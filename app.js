@@ -10,6 +10,13 @@ let dhuhrTime = document.getElementById("Dhuhr");
 let asrTime = document.getElementById("Asr");
 let maghribTime = document.getElementById("Maghrib");
 let ishaTime = document.getElementById("Isha");
+let dailyZekrContent = document.getElementById("daily-zekr-content");
+let dailyZekrRepeat = document.getElementById("daily-zekr-repeat");
+let dailyZekrSource = document.getElementById("daily-zekr-source");
+let morningAzkarList = document.getElementById("morning-azkar-list");
+let eveningAzkarList = document.getElementById("evening-azkar-list");
+const azkarApiUrl = "https://raw.githubusercontent.com/Seen-Arabic/Morning-And-Evening-Adhkar-DB/main/ar.json";
+let latestAzkar = [];
 document.getElementById("logo").onclick = function() {
     window.location.reload();
 };
@@ -72,6 +79,7 @@ window.onload = function() {
         cityName.innerHTML = `<p>${savedCityName}</p>`;
     }
     getCurrentDateAndTime(); // Fetch timings for saved city
+    fetchAzkarData();
 };
 
 // Update city name, save to localStorage, and fetch new timings on city change
@@ -161,7 +169,9 @@ function timePeriod() {
     let timings = latestTimings;
     let nextPrayerTime = null;
 
-    if (now.isBefore(moment(timings.Sunrise, "HH:mm"))) {
+    if (now.isBefore(moment(timings.Fajr, "HH:mm"))) {
+        nextPrayerTime = moment(timings.Fajr, "HH:mm");
+    } else if (now.isBefore(moment(timings.Sunrise, "HH:mm"))) {
         nextPrayerTime = moment(timings.Sunrise, "HH:mm");
     } else if (now.isBefore(moment(timings.Dhuhr, "HH:mm"))) {
         nextPrayerTime = moment(timings.Dhuhr, "HH:mm");
@@ -180,6 +190,140 @@ function timePeriod() {
     return duration;
 }
 
+function getDayOfYear(date = new Date()) {
+    const start = new Date(date.getFullYear(), 0, 0);
+    const diff = date - start;
+    const oneDay = 1000 * 60 * 60 * 24;
+    return Math.floor(diff / oneDay);
+}
+
+function normalizeAdhkarText(text) {
+    if (!text) return "";
+    return text.replace(/\s+/g, " ").trim();
+}
+
+function getRepeatedText(count) {
+    const parsedCount = Number(count);
+    if (!parsedCount || parsedCount < 1) return "مرة واحدة";
+    if (parsedCount === 1) return "مرة واحدة";
+    if (parsedCount === 2) return "مرتان";
+    return `${parsedCount} مرات`;
+}
+
+function getZekrText(item) {
+    return normalizeAdhkarText(
+        item?.content ||
+        item?.arabicText ||
+        item?.zekr ||
+        ""
+    );
+}
+
+function getZekrRepeat(item) {
+    if (item?.count_description) return item.count_description;
+    return getRepeatedText(item?.count ?? item?.repeat);
+}
+
+function getZekrType(item) {
+    const rawType = item?.type;
+    if (typeof rawType === "number") return rawType;
+    if (typeof rawType === "string" && rawType.trim() !== "") {
+        const lowered = rawType.toLowerCase().trim();
+        if (lowered === "both") return 0;
+        if (lowered === "morning") return 1;
+        if (lowered === "evening") return 2;
+        const parsed = Number(rawType);
+        if (!Number.isNaN(parsed)) return parsed;
+    }
+    return -1;
+}
+
+function pickRotatedItems(items, seed, count) {
+    if (!Array.isArray(items) || items.length === 0) return [];
+    if (items.length <= count) return items;
+    const picked = [];
+    for (let i = 0; i < count; i++) {
+        picked.push(items[(seed + i) % items.length]);
+    }
+    return picked;
+}
+
+function renderAzkarList(target, items, emptyMessage) {
+    if (!target) return;
+    target.innerHTML = "";
+    if (!items.length) {
+        target.innerHTML = `<li>${emptyMessage}</li>`;
+        return;
+    }
+    items.forEach(item => {
+        const li = document.createElement("li");
+        const zekr = getZekrText(item);
+        const repeat = getZekrRepeat(item);
+        li.innerHTML = `${zekr}<span class="azkar-repeat">التكرار: ${repeat}</span>`;
+        target.appendChild(li);
+    });
+}
+
+function renderDailyZekr(item) {
+    if (!dailyZekrContent || !dailyZekrRepeat || !dailyZekrSource) return;
+    if (!item) {
+        dailyZekrContent.textContent = "تعذر تحميل ذكر اليوم حاليا.";
+        dailyZekrRepeat.textContent = "";
+        dailyZekrSource.textContent = "";
+        return;
+    }
+    dailyZekrContent.textContent = getZekrText(item);
+    dailyZekrRepeat.textContent = `التكرار: ${getZekrRepeat(item)}`;
+    // dailyZekrSource.textContent = "المصدر: API أذكار مجاني";
+}
+
+function buildMorningAzkar(azkar) {
+    return azkar.filter(item => {
+        const type = getZekrType(item);
+        return type === 0 || type === 1;
+    });
+}
+
+function buildEveningAzkar(azkar) {
+    return azkar.filter(item => {
+        const type = getZekrType(item);
+        return type === 0 || type === 2;
+    });
+}
+
+async function fetchAzkarData() {
+    try {
+        const response = await axios.get(azkarApiUrl);
+        console.log('response of azkar>> ',response.data);
+        if (!Array.isArray(response.data)) {
+            throw new Error("Unexpected adhkar payload");
+        }
+
+        latestAzkar = response.data;
+        const daySeed = getDayOfYear();
+        const dailyItem = latestAzkar[daySeed % latestAzkar.length];
+        const morningItems = buildMorningAzkar(latestAzkar);
+        const eveningItems = buildEveningAzkar(latestAzkar);
+
+        renderDailyZekr(dailyItem);
+        renderAzkarList(
+            morningAzkarList,
+            pickRotatedItems(morningItems, daySeed, 6),
+            "لا توجد أذكار صباح متاحة حاليا."
+        );
+        renderAzkarList(
+            eveningAzkarList,
+            pickRotatedItems(eveningItems, daySeed, 6),
+            "لا توجد أذكار مساء متاحة حاليا."
+        );
+    } catch (error) {
+        console.log("Adhkar API error:", error);
+        renderDailyZekr(null);
+        renderAzkarList(morningAzkarList, [], "تعذر تحميل أذكار الصباح الآن.");
+        renderAzkarList(eveningAzkarList, [], "تعذر تحميل أذكار المساء الآن.");
+    }
+}
+
 // Only one interval, outside the function
 setInterval(() => {
     countdownTime.innerHTML = `<p>${timePeriod()}</p>`;
@@ -192,3 +336,4 @@ function getCurrentTime() {
 }
 
 getCurrentTime();
+
