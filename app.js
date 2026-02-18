@@ -22,8 +22,8 @@ let themeSwitchInput = document.querySelector(".ui-switch input[type='checkbox']
 let ramadanBanner = document.getElementById("ramadan-banner");
 let ramadanSubtitle = document.getElementById("ramadan-subtitle");
 const azkarApiUrl = "https://raw.githubusercontent.com/Seen-Arabic/Morning-And-Evening-Adhkar-DB/main/ar.json";
-const ramadanStartDate = new Date(2026, 1, 18, 0, 0, 0, 0); // February 18, 2026
-const ramadanEndDate = new Date(2026, 2, 19, 23, 59, 59, 999); // March 19, 2026
+const ramadanStartDate = new Date(2026, 1, 19, 0, 0, 0, 0); // February 19, 2026
+const ramadanEndDate = new Date(2026, 2, 20, 23, 59, 59, 999); // March 20, 2026
 let latestAzkar = [];
 document.getElementById("logo").onclick = function() {
     window.location.reload();
